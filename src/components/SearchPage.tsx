@@ -19,12 +19,12 @@ type verticalInterface = {
 const SearchPage = () => {
   const searchActions = useSearchActions();
   const [currentVertical, setCurrentVertical] = useState<verticalInterface>({
-    name: "",
-    key: "",
+    name: "All",
+    key: "all",
   });
 
   useEffect(() => {
-    if (currentVertical.key === "All") {
+    if (currentVertical.key === "all") {
       searchActions.setUniversal();
       searchActions
         .executeUniversalQuery()
@@ -47,13 +47,13 @@ const SearchPage = () => {
               {verticals.map((item, index) => {
                 const { name, key: _key } = item;
                 return (
-                  <div
+                  <li
                     onClick={() => setCurrentVertical(item)}
                     key={index}
-                    className="tracking-[1.1px] px-5 pb-2 hover:cursor-pointer"
+                    className={`tracking-[1.1px] relative px-5 pb-2 hover:cursor-pointer ${currentVertical.name === item.name && `active-nav-item `}`}
                   >
                     {name}
-                  </div>
+                  </li>
                 );
               })}
             </ul>
