@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.centered-container {
+  @apply mx-auto px-2 md:px-14 max-w-screen-xl;
+}
+
+.section {
+  @apply mt-8 mb-16;
+}
+
+.cta {
+  @apply px-6 py-3 rounded-full tracking-[0.075em] bg-[#ace3d0] text-[#252a68] hover:bg-[#82d4b9] font-bold;
+}
