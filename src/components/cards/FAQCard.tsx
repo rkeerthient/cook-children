@@ -8,7 +8,8 @@ import Faq from "../../types/faqs";
 import { CardProps } from "@yext/search-ui-react";
 
 const FAQCard = ({ result }: CardProps<Faq>) => {
-  const { question, answerV2, answer, c_primaryCTA } = result.rawData;
+  const { question, answerV2, answer, c_primaryCTA, c_secondaryCTA } =
+    result.rawData;
   return (
     <div className=" w-full text-primary">
       <div className="mx-auto w-full divide-y divide-black/5 rounded-xl bg-black/5">
@@ -21,10 +22,15 @@ const FAQCard = ({ result }: CardProps<Faq>) => {
           </DisclosureButton>
           <DisclosurePanel className="mt-2 text-sm/5 /50 flex flex-col text-secondary">
             <div>{answer}</div>
-            <div className="py-6">
+            <div className="py-6 flex gap-8 items-center">
               {c_primaryCTA && (
                 <a className="cta" href={c_primaryCTA.link}>
                   {c_primaryCTA.label}
+                </a>
+              )}
+              {c_secondaryCTA && (
+                <a className="cta" href={c_secondaryCTA.link}>
+                  {c_secondaryCTA.label}
                 </a>
               )}
             </div>
