@@ -11,7 +11,7 @@
 }
 
 .cta {
-  @apply px-6 py-3 rounded-full tracking-[0.075em] bg-[#ace3d0] text-[#252a68] hover:bg-[#82d4b9] font-bold;
+  @apply px-6 py-3 rounded-full tracking-[0.075em] bg-[#ace3d0] text-[#252a68] hover:bg-[#82d4b9] font-bold w-max md:w-auto;
 }
 
 .active-nav-item::after {

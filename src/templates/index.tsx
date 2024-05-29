@@ -8,7 +8,6 @@ import {
   TemplateConfig,
   TemplateRenderProps,
 } from "@yext/pages";
-import Locator from "../components/Locator";
 import PageLayout from "../components/page-layout";
 import "../index.css";
 import SearchPage from "../components/SearchPage";
@@ -48,18 +47,6 @@ export const verticals = [
   {
     name: "FAQS",
     key: "faqs",
-  },
-  {
-    name: "Healthcare Facilities",
-    key: "healthcare_facilities",
-  },
-  {
-    name: "Healthcare Professionals",
-    key: "healthcare_professionals",
-  },
-  {
-    name: "Services",
-    key: "specialties",
   },
 ];
 

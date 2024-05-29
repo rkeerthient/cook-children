@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { verticals } from "../templates";
 import FAQCard from "./cards/FAQCard";
+import ServicesCard from "./cards/ServicesCard";
 type verticalInterface = {
   name: string;
   key: string;
