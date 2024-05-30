@@ -44,9 +44,10 @@ export const verticals = [
     name: "All",
     key: "all",
   },
+
   {
-    name: "FAQS",
-    key: "faqs",
+    name: "Healthcare Professionals",
+    key: "healthcare_professionals",
   },
 ];
 

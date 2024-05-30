@@ -1,23 +1,30 @@
-import { useSearchActions } from "@yext/search-headless-react";
+import {
+  Result,
+  useSearchActions,
+  VerticalResults as VR,
+} from "@yext/search-headless-react";
 import {
   AppliedFilters,
   Pagination,
   ResultsCount,
   SearchBar,
-  LocationBias,
   VerticalResults,
   StandardCard,
   Geolocation,
+  onSearchFunc,
 } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
 import { verticals } from "../templates";
-import FAQCard from "./cards/FAQCard";
-import ServicesCard from "./cards/ServicesCard";
+import ProfessionalCard from "./cards/ProfessionalCard";
 type verticalInterface = {
   name: string;
   key: string;
 };
 const SearchPage = () => {
+  const [ids, setIds] = useState<string[]>([]);
+  const [results, setResults] = useState<
+    (VR[] | Result<Record<string, unknown>>)[]
+  >([]);
   const searchActions = useSearchActions();
   const [currentVertical, setCurrentVertical] = useState<verticalInterface>({
     name: "All",
@@ -25,25 +32,59 @@ const SearchPage = () => {
   });
 
   useEffect(() => {
+    if (!results) return;
+
+    const ids: string[] = [];
+
+    if (currentVertical.key !== "all") {
+      results.forEach((item: any) => ids.push(item.rawData.npi));
+    } else {
+      results.forEach((result: any) => {
+        if (result.verticalKey === "healthcare_professionals") {
+          ids.push(result.npi);
+        }
+      });
+    }
+
+    setIds(ids);
+    console.log(ids);
+  }, [results]);
+
+  const executeSearch = () => {
     if (currentVertical.key === "all") {
       searchActions.setUniversal();
       searchActions
         .executeUniversalQuery()
-        .then((res) => console.log(JSON.stringify(res)));
+        .then((res: any) => setResults(res?.verticalResults));
     } else {
       searchActions.setVertical(currentVertical.key);
       searchActions
         .executeVerticalQuery()
-        .then((res) => console.log(JSON.stringify(res)));
+        .then((res: any) => setResults(res?.verticalResults.results));
     }
+  };
+  useEffect(() => {
+    executeSearch();
   }, [currentVertical]);
 
+  const handleSearch: onSearchFunc = (searchEventData) => {
+    const { query } = searchEventData;
+    const queryParams = new URLSearchParams(window.location.search);
+    executeSearch();
+
+    if (query) {
+      queryParams.set("query", query);
+    } else {
+      queryParams.delete("query");
+    }
+    history.pushState(null, "", "?" + queryParams.toString());
+  };
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="bg-[#e7eaea]">
         <div className="centered-container">
           <div className="px-8 pt-8">
-            <SearchBar></SearchBar>
+            <SearchBar onSearch={handleSearch}></SearchBar>
             <ul className="pt-10 flex">
               {verticals.map((item, index) => {
                 const { name, key: _key } = item;
@@ -69,9 +110,10 @@ const SearchPage = () => {
               <AppliedFilters />
             </div>
             <VerticalResults
-              CardComponent={FAQCard}
+              CardComponent={ProfessionalCard}
               customCssClasses={{
-                verticalResultsContainer: "flex flex-col gap-4",
+                verticalResultsContainer:
+                  "grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8",
               }}
             />
             <Pagination />
