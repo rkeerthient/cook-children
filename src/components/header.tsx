@@ -27,7 +27,7 @@ const Header = ({ _site }: any) => {
 
   return (
     <>
-      <img src="https://i.imgur.com/EnjRgS1.png" alt="" />
+      <img src="https://i.imgur.com/jE8j6J4.png" alt="" className="w-full" />
     </>
   );
 };

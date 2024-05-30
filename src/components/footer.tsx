@@ -1,9 +1,6 @@
 const Footer = ({ _site }: any) => {
   return (
-    <img
-      src="https://locationsearch_familysearch_org.yextpages.net/static/assets/images/footer.png"
-      alt=""
-    />
+    <img src="https://i.imgur.com/Hq9XDsB.png" className="w-full" alt="" />
   );
 };
 
