@@ -8,6 +8,7 @@ import {
 import searchConfig from "./searchConfig";
 import { useState } from "react";
 import { Site } from "@yext/pages/*";
+import { LocationsProvider } from "../common/LocationsContext";
 
 type Props = {
   _site?: any;
@@ -18,9 +19,11 @@ const PageLayout = ({ _site, children }: Props) => {
     <div className="min-h-screen">
       <Header _site={_site} />
       <div className="py-8">
-        <SearchHeadlessProvider searcher={provideHeadless(searchConfig)}>
-          {children}
-        </SearchHeadlessProvider>
+        <LocationsProvider>
+          <SearchHeadlessProvider searcher={provideHeadless(searchConfig)}>
+            {children}
+          </SearchHeadlessProvider>
+        </LocationsProvider>
       </div>
       <Footer _site={_site}></Footer>
     </div>

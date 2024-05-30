@@ -1,14 +1,32 @@
 import * as React from "react";
-import { useState } from "react";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 
-const LocationsContext = React.createContext<any>({});
+export interface ReviewsData {
+  ratingValue: number;
+  ratingCount: number;
+  commentsCount: number;
+  npi: string;
+}
+
+interface ContextType {
+  reviewsData: ReviewsData[];
+  setReviewsData: React.Dispatch<React.SetStateAction<ReviewsData[]>>;
+  selectedLocation: any;
+  setSelectedLocation: React.Dispatch<React.SetStateAction<any>>;
+  hoveredLocation: any;
+  setHoveredLocation: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const LocationsContext = React.createContext<ContextType | undefined>(
+  undefined
+);
 
 export const LocationsProvider = ({
   children,
 }: React.PropsWithChildren<unknown>) => {
-  const [selectedLocation, setSelectedLocation] = useState<any>();
-  const [hoveredLocation, setHoveredLocation] = useState<any>();
+  const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const [hoveredLocation, setHoveredLocation] = useState<any>(null);
+  const [reviewsData, setReviewsData] = useState<ReviewsData[]>([]);
 
   return (
     <LocationsContext.Provider
@@ -18,20 +36,23 @@ export const LocationsProvider = ({
           setSelectedLocation,
           hoveredLocation,
           setHoveredLocation,
+          reviewsData,
+          setReviewsData,
         }),
-        [
-          selectedLocation,
-          setSelectedLocation,
-          hoveredLocation,
-          setHoveredLocation,
-        ]
+        [selectedLocation, hoveredLocation, reviewsData]
       )}
     >
       {children}
     </LocationsContext.Provider>
   );
 };
-// make sure use
+
 export const useLocationsContext = () => {
-  return useContext(LocationsContext);
+  const context = useContext(LocationsContext);
+  if (!context) {
+    throw new Error(
+      "useLocationsContext must be used within a LocationsProvider"
+    );
+  }
+  return context;
 };

@@ -2,13 +2,12 @@ import { PagesHttpRequest, PagesHttpResponse } from "@yext/pages/*";
 const getAssets = async (
   request: PagesHttpRequest
 ): Promise<PagesHttpResponse> => {
-  const { npi } = request.queryParams;
+  const { npis, length } = request.queryParams;
   const getFieldsResponse = await fetch(
-    `https://w5aug03g03.execute-api.us-east-1.amazonaws.com/prod/reviews/person/2102599/${npi}?perPage=1&page=1`
+    `${YEXT_PUBLC_REVIEWS_URL}/person/${YEXT_PUBLIC_BUSINESS_ID}/${npis}?perPage=${length}&page=1`
   );
 
   const resp = await getFieldsResponse.json();
-  console.log(JSON.stringify(resp));
 
   return {
     body: JSON.stringify(resp),

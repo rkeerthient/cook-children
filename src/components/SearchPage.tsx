@@ -16,12 +16,16 @@ import {
 import { useEffect, useState } from "react";
 import { verticals } from "../templates";
 import ProfessionalCard from "./cards/ProfessionalCard";
+import { ReviewsData, useLocationsContext } from "../common/LocationsContext";
+import { Ratings } from "../types/ratings";
 type verticalInterface = {
   name: string;
   key: string;
 };
 const SearchPage = () => {
-  const [ids, setIds] = useState<string[]>([]);
+  const context = useLocationsContext();
+
+  const { setReviewsData } = context;
   const [results, setResults] = useState<
     (VR[] | Result<Record<string, unknown>>)[]
   >([]);
@@ -46,9 +50,29 @@ const SearchPage = () => {
       });
     }
 
-    setIds(ids);
-    console.log(ids);
+    ids && getReviews(ids, results.length);
   }, [results]);
+
+  const getReviews = async (ids: string[], _length: number) => {
+    const url = `/api/getRatings?npis=${ids.join(",")}&length=${_length}`;
+    try {
+      let requ = await fetch(url);
+      const res: Ratings = await requ.json();
+      let resBuilder: ReviewsData[] = [];
+      res.entities.forEach((item) => {
+        resBuilder.push({
+          ratingValue: item.overallRating.value,
+          ratingCount: item.totalRatingCount,
+          commentsCount: item.totalCommentCount,
+          npi: item.id,
+        });
+      });
+      console.log(JSON.stringify(resBuilder));
+      setReviewsData(resBuilder);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
 
   const executeSearch = () => {
     if (currentVertical.key === "all") {

@@ -2,11 +2,11 @@ import { CardProps } from "@yext/search-ui-react";
 import HealthcareProfessional from "../../types/healthcare_professionals";
 import { HoursStatus, Image } from "@yext/pages-components";
 import { CheckIcon, PhoneIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { useEffect, useState } from "react";
-import { Entity, Ratings } from "../../types/ratings";
+import { useLocationsContext } from "../../common/LocationsContext";
+import StarRatings from "react-star-ratings";
 
 const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
-  const [reviewData, setReviewData] = useState<Entity>();
+  const { reviewsData } = useLocationsContext();
   const { name } = result;
   const {
     headshot,
@@ -19,22 +19,6 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
     acceptingNewPatients,
     npi,
   } = result.rawData;
-
-  // useEffect(() => {
-  //   const getReviews = async () => {
-  //     const url = `/api/getRatings?npi=${npi}`;
-  //     try {
-  //       let requ = await fetch(url);
-  //       const res: Ratings = await requ.json();
-
-  //       setReviewData(res.entities[0]);
-  //     } catch (error) {
-  //       console.error("Error fetching reviews:", error);
-  //     }
-  //   };
-
-  //   getReviews();
-  // }, []);
 
   return (
     <div className="border rounded-lg">
@@ -55,15 +39,49 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
           {name}
         </a>
         <div className="px-2 space-y-1">
-          {reviewData ? (
+          {reviewsData.length >= 1 ? (
             <div className="flex flex-col gap-1">
-              <div>{reviewData.overallRating.value}/5</div>
-              <div>{reviewData.totalRatingCount}</div>
+              <div className="flex items-center gap-1">
+                <StarRatings
+                  rating={
+                    reviewsData.find((item: any) => item.npi === npi)
+                      ?.ratingValue
+                  }
+                  starRatedColor="#ffb71d"
+                  numberOfStars={5}
+                  name="rating"
+                  starDimension="22px"
+                  starSpacing="1px"
+                />
+                <div>
+                  {
+                    reviewsData.find((item: any) => item.npi === npi)
+                      ?.ratingValue
+                  }
+                  /5 (
+                  {
+                    reviewsData.find((item: any) => item.npi === npi)
+                      ?.ratingCount
+                  }
+                  )
+                </div>
+              </div>
+              <div className="pointer-events-none text-sm font-medium  flex items-center gap-1 text-secondary">
+                verified patient reviews{" "}
+                {
+                  reviewsData.find((item: any) => item.npi === npi)
+                    ?.commentsCount
+                }
+              </div>
             </div>
           ) : (
             <div className="animate-pulse flex flex-col gap-1">
-              <div className="  bg-slate-400 rounded"><span className="invisible">Loading</span></div>
-              <div className="  bg-slate-400 rounded"><span className="invisible">Loading</span></div>
+              <div className="  bg-slate-400 rounded">
+                <span className="invisible">Loading</span>
+              </div>
+              <div className="  bg-slate-400 rounded">
+                <span className="invisible">Loading</span>
+              </div>
             </div>
           )}
           <p className="pointer-events-none block  text-lg font-medium text-[#2aa67c]">
