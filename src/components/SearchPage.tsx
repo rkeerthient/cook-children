@@ -12,6 +12,7 @@ import {
   StandardCard,
   Geolocation,
   onSearchFunc,
+  Facets,
 } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
 import { verticals } from "../templates";
@@ -125,10 +126,15 @@ const SearchPage = () => {
           </div>
         </div>
       </div>
-      <div className="w-full">
-        <div className="centered-container flex mt-4">
-          <div className="flex-grow">
-            <div className="flex flex-col items-baseline">
+      <div className="w-full ">
+        <div className="flex flex-row gap-2 mt-4 w-full px-14 ">
+          <div className="w-1/5">
+            <Facets
+              customCssClasses={{ facetsContainer: "ml-8 mr-4 " }}
+            ></Facets>
+          </div>
+          <div className="flex-grow w-4/5">
+            <div className="flex flex-col items-baseline  ">
               <ResultsCount />
               <AppliedFilters />
             </div>
