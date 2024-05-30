@@ -28,7 +28,7 @@ export const getHeadConfig: GetHeadConfig<
   TemplateRenderProps
 > = (): HeadConfig => {
   return {
-    title: "LDS | Search",
+    title: "Cook Children | Search",
     charset: "UTF-8",
     viewport: "width=device-width, initial-scale=1",
     tags: [
