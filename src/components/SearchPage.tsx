@@ -43,14 +43,14 @@ const SearchPage = () => {
     if (currentVertical.key !== "all") {
       results.forEach((item: any) => ids.push(item.rawData.npi));
     } else {
-      results.forEach((result: any) => {
-        if (result.verticalKey === "healthcare_professionals") {
-          ids.push(result.npi);
+      results.forEach((_results: any) => {
+        if (_results.verticalKey === "healthcare_professionals") {
+          _results.results.map((item: any) => ids.push(item.rawData.npi));
         }
       });
     }
 
-    ids && getReviews(ids, results.length);
+    ids.length >= 1 && getReviews(ids, results.length);
   }, [results]);
 
   const getReviews = async (ids: string[], _length: number) => {
@@ -67,7 +67,6 @@ const SearchPage = () => {
           npi: item.id,
         });
       });
-      console.log(JSON.stringify(resBuilder));
       setReviewsData(resBuilder);
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -77,9 +76,9 @@ const SearchPage = () => {
   const executeSearch = () => {
     if (currentVertical.key === "all") {
       searchActions.setUniversal();
-      searchActions
-        .executeUniversalQuery()
-        .then((res: any) => setResults(res?.verticalResults));
+      searchActions.executeUniversalQuery().then((res: any) => {
+        setResults(res?.verticalResults);
+      });
     } else {
       searchActions.setVertical(currentVertical.key);
       searchActions

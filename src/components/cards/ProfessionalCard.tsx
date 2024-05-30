@@ -2,12 +2,8 @@ import { CardProps } from "@yext/search-ui-react";
 import HealthcareProfessional from "../../types/healthcare_professionals";
 import { HoursStatus, Image } from "@yext/pages-components";
 import { CheckIcon, PhoneIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import {
-  ReviewsData,
-  useLocationsContext,
-} from "../../common/LocationsContext";
+import { useLocationsContext } from "../../common/LocationsContext";
 import StarRatings from "react-star-ratings";
-import { useState } from "react";
 
 const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
   const { reviewsData } = useLocationsContext();
@@ -23,6 +19,7 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
     acceptingNewPatients,
     npi,
   } = result.rawData;
+
   const ratingValue = reviewsData.find(
     (item: any) => item.npi === npi
   )?.ratingValue;
@@ -38,7 +35,7 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
       <div className="relative flex flex-col">
         <a
           href={landingPageUrl}
-          className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden rounded-t-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 bottom-12"
+          className="group aspect-square block w-full overflow-hidden rounded-t-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 bottom-12"
         >
           <Image
             image={headshot!}
