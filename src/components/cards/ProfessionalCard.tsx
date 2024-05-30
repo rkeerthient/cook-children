@@ -89,7 +89,7 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
               </div>
             </div>
           )}
-          <p className="pointer-events-none block  text-lg font-medium text-[#2aa67c]">
+          <p className="pointer-events-none block  text-lg font-medium text-[#2aa67c] h-12">
             {c_specialty}
           </p>
           <HoursStatus

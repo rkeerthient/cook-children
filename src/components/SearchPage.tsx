@@ -1,5 +1,6 @@
 import {
   Result,
+  UniversalLimit,
   useSearchActions,
   VerticalResults as VR,
 } from "@yext/search-headless-react";
@@ -13,19 +14,23 @@ import {
   Geolocation,
   onSearchFunc,
   Facets,
+  CardComponent,
 } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
 import { verticals } from "../templates";
-import ProfessionalCard from "./cards/ProfessionalCard";
 import { ReviewsData, useLocationsContext } from "../common/LocationsContext";
 import { Ratings } from "../types/ratings";
+import FAQPage from "./pages/FAQPage";
+import ProfessionalPage from "./pages/ProfessionalPage";
+import ServicePage from "./pages/ServicePage";
+import UniversalPage from "./pages/UniversalPage";
 type verticalInterface = {
   name: string;
   key: string;
 };
 const SearchPage = () => {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const context = useLocationsContext();
-
   const { setReviewsData } = context;
   const [results, setResults] = useState<
     (VR[] | Result<Record<string, unknown>>)[]
@@ -35,12 +40,15 @@ const SearchPage = () => {
     name: "All",
     key: "all",
   });
-
+  const universalLimit: UniversalLimit = {
+    faqs: 4,
+    healthcare_facilities: 4,
+    healthcare_professionals: 4,
+    specialties: 4,
+  };
   useEffect(() => {
     if (!results) return;
-
     const ids: string[] = [];
-
     if (currentVertical.key !== "all") {
       results.forEach((item: any) => ids.push(item.rawData.npi));
     } else {
@@ -50,7 +58,6 @@ const SearchPage = () => {
         }
       });
     }
-
     ids.length >= 1 && getReviews(ids, results.length);
   }, [results]);
 
@@ -75,16 +82,22 @@ const SearchPage = () => {
   };
 
   const executeSearch = () => {
+    setIsLoaded(false);
     if (currentVertical.key === "all") {
       searchActions.setUniversal();
-      searchActions.executeUniversalQuery().then((res: any) => {
-        setResults(res?.verticalResults);
-      });
+      searchActions.setUniversalLimit(universalLimit);
+      searchActions
+        .executeUniversalQuery()
+        .then((res: any) => {
+          setResults(res?.verticalResults);
+        })
+        .finally(() => setIsLoaded(true));
     } else {
       searchActions.setVertical(currentVertical.key);
       searchActions
         .executeVerticalQuery()
-        .then((res: any) => setResults(res?.verticalResults.results));
+        .then((res: any) => setResults(res?.verticalResults.results))
+        .finally(() => setIsLoaded(true));
     }
   };
   useEffect(() => {
@@ -103,6 +116,7 @@ const SearchPage = () => {
     }
     history.pushState(null, "", "?" + queryParams.toString());
   };
+
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="bg-[#e7eaea]">
@@ -127,28 +141,16 @@ const SearchPage = () => {
         </div>
       </div>
       <div className="w-full ">
-        <div className="flex flex-row gap-2 mt-4 w-full px-14 ">
-          <div className="w-1/5">
-            <Facets
-              customCssClasses={{ facetsContainer: "ml-8 mr-4 " }}
-            ></Facets>
-          </div>
-          <div className="flex-grow w-4/5">
-            <div className="flex flex-col items-baseline  ">
-              <ResultsCount />
-              <AppliedFilters />
-            </div>
-            <VerticalResults
-              CardComponent={ProfessionalCard}
-              customCssClasses={{
-                verticalResultsContainer:
-                  "grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8",
-              }}
-            />
-            <Pagination />
-            <Geolocation />
-          </div>
-        </div>
+        {currentVertical &&
+          (currentVertical.key === "faqs" ? (
+            <FAQPage />
+          ) : currentVertical.key === "specialties" ? (
+            <ServicePage />
+          ) : currentVertical.key === "healthcare_professionals" ? (
+            <ProfessionalPage />
+          ) : (
+            <UniversalPage />
+          ))}
       </div>
     </div>
   );
