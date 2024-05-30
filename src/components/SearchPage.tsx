@@ -24,6 +24,7 @@ import FAQPage from "./pages/FAQPage";
 import ProfessionalPage from "./pages/ProfessionalPage";
 import ServicePage from "./pages/ServicePage";
 import UniversalPage from "./pages/UniversalPage";
+import Locator from "./pages/LocationsPage";
 type verticalInterface = {
   name: string;
   key: string;
@@ -148,6 +149,8 @@ const SearchPage = () => {
             <ServicePage />
           ) : currentVertical.key === "healthcare_professionals" ? (
             <ProfessionalPage />
+          ) : currentVertical.key === "healthcare_facilities" ? (
+            <Locator />
           ) : (
             <UniversalPage />
           ))}

@@ -22,9 +22,7 @@ const FAQCard = ({ result }: CardProps<Faq>) => {
             <ChevronDownIcon className="size-5 fill-black/60 group-data-[hover]:fill-black/50 group-data-[open]:rotate-180" />
           </DisclosureButton>
           <DisclosurePanel className="mt-2 text-sm/5 /50 flex flex-col text-secondary">
-            <div>
-              <LexicalRichText serializedAST={JSON.stringify(answerV2.json)} />
-            </div>
+            <LexicalRichText serializedAST={JSON.stringify(answerV2.json)} />
             <div className="flex flex-col md:flex-row gap-4 md:gap-8 justify-start md:items-center pt-4 pb-2">
               {c_primaryCTA && (
                 <a className="cta" href={c_primaryCTA.link}>

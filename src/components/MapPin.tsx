@@ -1,10 +1,12 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom/server";
-import { Popup, LngLatLike, Map } from "mapbox-gl";
-import Location, { Coordinate } from "../types/locations";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Result } from "@yext/search-headless-react";
-import { HiMapPin } from "react-icons/hi2";
+import { LngLatLike, Popup, Map } from "mapbox-gl";
+import { useState, useRef, useEffect } from "react";
+import * as ReactDOM from "react-dom";
+import HealthcareFacility from "../types/healthcare_facilities";
+import { Coordinate } from "@yext/pages-components";
+import { FaLocationPin } from "react-icons/fa6";
+import { renderToString } from "react-dom/server";
+
 const transformToMapboxCoord = (
   coordinate: Coordinate
 ): LngLatLike | undefined => {
@@ -15,41 +17,49 @@ const transformToMapboxCoord = (
   };
 };
 
-const getLocationHTML = (location: Location) => {
+const getLocationHTML = (location: HealthcareFacility) => {
   const address = location.address;
   const html = (
     <div>
-      <p className="font-bold">{location.neighborhood || "unknown location"}</p>
+      <p className="font-bold">{location.name || "unknown location"}</p>
       <p>{location.address.line1}</p>
       <p>{`${address.city}, ${address.region}, ${address.postalCode}`}</p>
     </div>
   );
-  return ReactDOM.renderToString(html);
+
+  return renderToString(html);
 };
 
 export interface MapPinProps {
   mapbox: Map;
-  result: Result<Location>;
-  hoveredLocationId: string;
-  setHoveredLocationId: (value: string) => void;
-  clicked: string;
-  setClicked: (value: string) => void;
+  result: Result<HealthcareFacility>;
+  selectedLocationId: string;
+  selectedLocationFromContext: string;
+  setSelectedLocationId: (value: string) => void;
 }
 
-const MapPin: React.FC<MapPinProps> = ({
+const MapPin = ({
   mapbox,
   result,
-  hoveredLocationId,
-  setHoveredLocationId,
-  clicked,
+  selectedLocationId,
+  selectedLocationFromContext,
+  setSelectedLocationId,
 }: MapPinProps) => {
   const location = result.rawData;
-  const [active, setActive] = useState(false);
-  const popupRef = useRef(
-    new Popup({ offset: 15 }).on("close", () => setActive(false))
-  );
+  const [isActive, setIsActive] = useState<boolean>();
+  const popupRef = useRef(new Popup({ offset: 15 }));
   useEffect(() => {
-    if (active && location.yextDisplayCoordinate) {
+    if (selectedLocationFromContext) {
+      document
+        .querySelectorAll(".mapboxgl-popup")
+        .forEach((item) => item.remove());
+
+      setIsActive(selectedLocationFromContext === location.id);
+    }
+  }, [selectedLocationFromContext, location.id]);
+
+  useEffect(() => {
+    if (isActive && location.yextDisplayCoordinate) {
       const mapboxCoordinate = transformToMapboxCoord(
         location.yextDisplayCoordinate
       );
@@ -59,31 +69,19 @@ const MapPin: React.FC<MapPinProps> = ({
           .setHTML(getLocationHTML(location))
           .addTo(mapbox);
       }
+    } else {
+      popupRef.current.remove();
     }
-  }, [active, mapbox, location]);
+  }, [isActive, mapbox, location]);
 
-  const handleClick = useCallback(() => {
-    setActive(true);
-  }, []);
-
-  const updateHoveredLocation = () => {
-    setHoveredLocationId(location.id);
-  };
-
-  const removeHoveredLocation = () => {
-    setHoveredLocationId("");
+  const handleClick = () => {
+    setSelectedLocationId(isActive ? "" : location.id);
   };
 
   return (
-    <button
-      onClick={handleClick}
-      onMouseEnter={updateHoveredLocation}
-      onMouseLeave={removeHoveredLocation}
-    >
-      <HiMapPin
-        className={`text-orange ${
-          hoveredLocationId === location.id ? `h-12 w-12` : `h-8 w-8`
-        }`}
+    <button onClick={handleClick}>
+      <FaLocationPin
+        className={`mapPin ${isActive ? "h-10 w-10" : "h-8 w-8"}`}
       />
     </button>
   );

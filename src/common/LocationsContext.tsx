@@ -11,10 +11,12 @@ export interface ReviewsData {
 interface ContextType {
   reviewsData: ReviewsData[];
   setReviewsData: React.Dispatch<React.SetStateAction<ReviewsData[]>>;
-  selectedLocation: any;
-  setSelectedLocation: React.Dispatch<React.SetStateAction<any>>;
-  hoveredLocation: any;
-  setHoveredLocation: React.Dispatch<React.SetStateAction<any>>;
+  selectedLocationId: any;
+  setSelectedLocationId: React.Dispatch<React.SetStateAction<any>>;
+  hoveredLocationId: any;
+  setHoveredLocationId: React.Dispatch<React.SetStateAction<any>>;
+  clicked: any;
+  setClicked: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const LocationsContext = React.createContext<ContextType | undefined>(
@@ -24,22 +26,25 @@ const LocationsContext = React.createContext<ContextType | undefined>(
 export const LocationsProvider = ({
   children,
 }: React.PropsWithChildren<unknown>) => {
-  const [selectedLocation, setSelectedLocation] = useState<any>(null);
-  const [hoveredLocation, setHoveredLocation] = useState<any>(null);
+  const [selectedLocationId, setSelectedLocationId] = useState<any>(null);
+  const [hoveredLocationId, setHoveredLocationId] = useState<any>(null);
+  const [clicked, setClicked] = useState<any>(null);
   const [reviewsData, setReviewsData] = useState<ReviewsData[]>([]);
 
   return (
     <LocationsContext.Provider
       value={React.useMemo(
         () => ({
-          selectedLocation,
-          setSelectedLocation,
-          hoveredLocation,
-          setHoveredLocation,
+          selectedLocationId,
+          setSelectedLocationId,
+          hoveredLocationId,
+          setHoveredLocationId,
           reviewsData,
           setReviewsData,
+          clicked,
+          setClicked,
         }),
-        [selectedLocation, hoveredLocation, reviewsData]
+        [selectedLocationId, hoveredLocationId, reviewsData, clicked]
       )}
     >
       {children}
