@@ -2,11 +2,9 @@ import { CardProps } from "@yext/search-ui-react";
 import { BsClock, BsGlobe, BsPin } from "react-icons/bs";
 import { CiPhone } from "react-icons/ci";
 import { LiaDirectionsSolid } from "react-icons/lia";
-import Location from "../../types/locations";
 import HoursText from "../HoursText";
 import HealthcareFacility from "../../types/healthcare_facilities";
 import { useLocationsContext } from "../../common/LocationsContext";
-import { Image } from "@yext/pages-components";
 
 const LocationCard = ({ result }: CardProps<HealthcareFacility>) => {
   const { setSelectedLocationId } = useLocationsContext();
