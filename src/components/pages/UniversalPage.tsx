@@ -1,21 +1,17 @@
-import * as React from "react";
+import { UniversalLimit, useSearchActions } from "@yext/search-headless-react";
 import {
   DirectAnswer,
+  MapboxMap,
   ResultsCount,
-  SpellCheck,
-  StandardCard,
-  StandardSection,
   UniversalResults,
 } from "@yext/search-ui-react";
-import {
-  UniversalLimit,
-  useSearchActions,
-  useSearchState,
-} from "@yext/search-headless-react";
+import { useLayoutEffect, useState } from "react";
+import MapPin from "../MapPin";
+import FAQCard from "../cards/FAQCard";
+import LocationCard from "../cards/LocationCard";
 import ProfessionalCard from "../cards/ProfessionalCard";
 import ServicesCard from "../cards/ServicesCard";
-import { useLayoutEffect, useState } from "react";
-import FAQCard from "../cards/FAQCard";
+import Mapboxuniv from "../Mapboxuniv";
 
 const UniversalPage = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -33,6 +29,26 @@ const UniversalPage = () => {
     searchActions.executeUniversalQuery().then((res) => setIsLoaded(true));
   }, []);
 
+  const MapSection = ({ results, CardComponent, header }: any) => {
+    if (!CardComponent) {
+      return <div>Missing Card Component</div>;
+    }
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="univLocMap">
+          <Mapboxuniv data={results} />
+        </div>
+        <div>
+          <div>{header}</div>
+          <div className="flex flex-col gap-4">
+            {results.map((r: any, index: number) => (
+              <CardComponent key={index} result={r} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
   const Grid4Section = ({ results, CardComponent, header }: any) => {
     if (!CardComponent) {
       return <div>Missing Card Component</div>;
@@ -88,8 +104,8 @@ const UniversalPage = () => {
                 },
                 healthcare_facilities: {
                   label: "Healthcare Facilities",
-                  CardComponent: StandardCard,
-                  SectionComponent: Grid4Section,
+                  CardComponent: LocationCard,
+                  SectionComponent: MapSection,
                 },
                 healthcare_professionals: {
                   label: "Healthcare Professionals",

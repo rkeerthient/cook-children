@@ -63,9 +63,9 @@ export interface MapPinProps {
   mapbox: Map;
   result: Result<HealthcareFacility>;
   index: number;
-  selectedLocationId: string;
-  selectedLocationFromContext: string;
-  setSelectedLocationId: (value: string) => void;
+  selectedLocationId?: string;
+  selectedLocationFromContext?: string;
+  setSelectedLocationId?: (value: string) => void;
 }
 
 const MapPin = ({
@@ -76,6 +76,8 @@ const MapPin = ({
   selectedLocationFromContext,
   setSelectedLocationId,
 }: MapPinProps) => {
+  console.log(JSON.stringify(result));
+
   const location = result.rawData;
   const [isActive, setIsActive] = useState<boolean>();
   const popupRef = useRef(new Popup({ offset: 15 }));
