@@ -50,7 +50,10 @@ const SearchPage = () => {
   useEffect(() => {
     if (!results) return;
     const ids: string[] = [];
-    if (currentVertical.key !== "all") {
+    if (
+      currentVertical.key !== "all" &&
+      currentVertical.key === "healthcare_professionals"
+    ) {
       results.forEach((item: any) => ids.push(item.rawData.npi));
     } else {
       results.forEach((_results: any) => {

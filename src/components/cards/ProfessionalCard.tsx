@@ -4,6 +4,7 @@ import { HoursStatus, Image } from "@yext/pages-components";
 import { CheckIcon, PhoneIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useLocationsContext } from "../../common/LocationsContext";
 import StarRatings from "react-star-ratings";
+import HoursText from "../HoursText";
 
 const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
   const { reviewsData } = useLocationsContext();
@@ -18,6 +19,7 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
     c_acceptingPatientsAges03,
     acceptingNewPatients,
     npi,
+    timezone,
   } = result.rawData;
 
   const ratingValue = reviewsData.find(
@@ -92,10 +94,8 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
           <p className="pointer-events-none block  text-lg font-medium text-[#2aa67c] h-12">
             {c_specialty}
           </p>
-          <HoursStatus
-            hours={hours}
-            className="pointer-events-none block text-sm font-medium text-secondary"
-          />
+
+          <HoursText timezone={timezone} hours={hours} />
           <div className="pointer-events-none flex justify-center md:justify-start font-medium leading-loose items-center text-sm text-secondary">
             <PhoneIcon className="h-4 w-4" />
             {mainPhone && (

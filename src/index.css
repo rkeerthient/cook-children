@@ -24,3 +24,7 @@
   width: 75%;
   background-color: #005cb9;
 }
+
+.mapboxgl-popup-close-button{
+  @apply top-2 right-1 text-xl
+}

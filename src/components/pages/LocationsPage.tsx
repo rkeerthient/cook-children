@@ -6,30 +6,22 @@ import {
 } from "@yext/search-headless-react";
 import {
   AppliedFilters,
-  Coordinate,
-  Facets,
   Geolocation,
   MapboxMap,
   OnDragHandler,
   Pagination,
   ResultsCount,
-  SearchBar,
   VerticalResults,
 } from "@yext/search-ui-react";
 import { LngLat, LngLatBounds } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import * as React from "react";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { IoIosClose } from "react-icons/io";
-import { createCtx } from "../../common/createContext";
-import Loader from "../Loader";
-import LocationCard from "../cards/LocationCard";
-import MapPin from "../MapPin";
 import { useLocationsContext } from "../../common/LocationsContext";
+import MapPin from "../MapPin";
+import LocationCard from "../cards/LocationCard";
 
 const LocationsPage = () => {
-  const [hoveredLocation, setHoveredLocation] = useState("");
-  const [clicked, setClicked] = useState("");
   const searchActions = useSearchActions();
   const filters = useSearchState((state) => state.filters.static);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +30,11 @@ const LocationsPage = () => {
     selectedLocationId: _selectedLocationId,
     setSelectedLocationId: _setSelectedLocationId,
   } = useLocationsContext();
+
+  useEffect(() => {
+    selectedLocationId && _setSelectedLocationId(selectedLocationId);
+  }, [selectedLocationId]);
+
   useLayoutEffect(() => {
     setIsLoading(true);
     searchActions.setVertical("healthcare_facilities");
@@ -74,10 +71,7 @@ const LocationsPage = () => {
     <>
       {!isLoading && (
         <div className="flex flex-row">
-          <div
-            className="flex flex-col w-2/5 p-4 overflow-scroll relative"
-            style={{ height: "95vh" }}
-          >
+          <div className="flex flex-col w-2/5 p-4 relative">
             <>
               <div>
                 <ResultsCount />
@@ -85,7 +79,8 @@ const LocationsPage = () => {
                 <VerticalResults
                   CardComponent={LocationCard}
                   customCssClasses={{
-                    verticalResultsContainer: "flex flex-col gap-4",
+                    verticalResultsContainer:
+                      "flex flex-col gap-4 h-[95vh] overflow-scroll ",
                   }}
                 />
               </div>
@@ -112,7 +107,7 @@ const LocationsPage = () => {
                   selectedLocationId={selectedLocationId}
                   setSelectedLocationId={setSelectedLocationId}
                   selectedLocationFromContext={_selectedLocationId}
-                />
+                ></MapPin>
               )}
             />
           </div>

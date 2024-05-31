@@ -8,13 +8,9 @@ import {
   TemplateConfig,
   TemplateRenderProps,
 } from "@yext/pages";
+import SearchPage from "../components/SearchPage";
 import PageLayout from "../components/page-layout";
 import "../index.css";
-import SearchPage from "../components/SearchPage";
-import FAQCard from "../components/cards/FAQCard";
-import ProfessionalCard from "../components/cards/ProfessionalCard";
-import { StandardCard } from "@yext/search-ui-react";
-import ServicesCard from "../components/cards/ServicesCard";
 
 export const config: TemplateConfig = {
   name: "search",
