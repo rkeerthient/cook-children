@@ -15,6 +15,7 @@ import ProfessionalPage from "./pages/ProfessionalPage";
 import ServicePage from "./pages/ServicePage";
 import UniversalPage from "./pages/UniversalPage";
 import { useTypingEffect } from "./useTypeEffect";
+import useURLSearchParams from "./useURLSearchParams";
 type verticalInterface = {
   name: string;
   key: string;
@@ -100,6 +101,8 @@ const SearchPage = () => {
   };
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
+    searchParams && console.log(JSON.stringify(searchParams));
+
     executeSearch();
     if (currentVertical) {
       searchParams.set("vertical", currentVertical.key);

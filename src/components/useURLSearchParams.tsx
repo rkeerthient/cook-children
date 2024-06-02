@@ -1,27 +1,27 @@
 import { useState, useEffect } from "react";
-import { getRuntime } from "@yext/pages/util";
 
 const getURLSearchParams = () => {
-  if (!getRuntime().isServerSide) {
+  if (typeof window !== "undefined") {
     return new URLSearchParams(window.location.search);
-  } else {
-    return;
   }
+  return new URLSearchParams(); // Return a new instance to avoid undefined errors
 };
 
 export const useURLSearchParams = () => {
   const [urlSearchParams, setUrlSearchParams] = useState(getURLSearchParams);
 
   useEffect(() => {
-    const onChange = () => {
-      setUrlSearchParams(new URLSearchParams(window.location.search));
-    };
+    if (typeof window !== "undefined") {
+      const onChange = () => {
+        setUrlSearchParams(new URLSearchParams(window.location.search));
+      };
 
-    window.addEventListener("popstate", onChange);
-    return () => {
-      window.removeEventListener("popstate", onChange);
-    };
-  }, [urlSearchParams]);
+      window.addEventListener("popstate", onChange);
+      return () => {
+        window.removeEventListener("popstate", onChange);
+      };
+    }
+  }, []);
 
   return urlSearchParams;
 };
