@@ -1,23 +1,16 @@
-import { useSearchActions } from "@yext/search-headless-react";
 import {
-  Facets,
-  ResultsCount,
   AppliedFilters,
-  Pagination,
-  VerticalResults,
   Geolocation,
+  Pagination,
+  ResultsCount,
+  VerticalResults,
 } from "@yext/search-ui-react";
-import { useLayoutEffect, useState } from "react";
 import ServicesCard from "../cards/ServicesCard";
+import { useVerticalSearch } from "../useVerticalSearch";
+import { PageProps } from "./FAQPage";
 
-const ServicePage = () => {
-  const searchActions = useSearchActions();
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  useLayoutEffect(() => {
-    setIsLoaded(false);
-    searchActions.setVertical("specialties");
-    searchActions.executeVerticalQuery().then((res) => setIsLoaded(true));
-  }, []);
+const ServicePage = ({ verticalKey }: PageProps) => {
+   const { isLoaded } = useVerticalSearch(verticalKey) || false;;
   return (
     <>
       {isLoaded && (

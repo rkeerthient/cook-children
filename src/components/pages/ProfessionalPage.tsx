@@ -1,23 +1,17 @@
 import {
-  Facets,
-  ResultsCount,
   AppliedFilters,
-  Pagination,
-  VerticalResults,
+  Facets,
   Geolocation,
+  Pagination,
+  ResultsCount,
+  VerticalResults,
 } from "@yext/search-ui-react";
 import ProfessionalCard from "../cards/ProfessionalCard";
-import { useSearchActions } from "@yext/search-headless-react";
-import { useLayoutEffect, useState } from "react";
+import { useVerticalSearch } from "../useVerticalSearch";
+import { PageProps } from "./FAQPage";
 
-const ProfessionalPage = () => {
-  const searchActions = useSearchActions();
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  useLayoutEffect(() => {
-    setIsLoaded(false);
-    searchActions.setVertical("healthcare_professionals");
-    searchActions.executeVerticalQuery().then((res) => setIsLoaded(true));
-  }, []);
+const ProfessionalPage = ({ verticalKey }: PageProps) => {
+  const { isLoaded } = useVerticalSearch(verticalKey) || false;
   return (
     <>
       {isLoaded && (

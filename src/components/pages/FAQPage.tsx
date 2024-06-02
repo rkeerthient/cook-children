@@ -1,23 +1,20 @@
 import {
-  Facets,
-  ResultsCount,
   AppliedFilters,
-  Pagination,
-  VerticalResults,
   Geolocation,
+  Pagination,
+  ResultsCount,
+  VerticalResults,
 } from "@yext/search-ui-react";
 import FAQCard from "../cards/FAQCard";
-import { useSearchActions } from "@yext/search-headless-react";
-import { useLayoutEffect, useState } from "react";
+import { useVerticalSearch } from "../useVerticalSearch";
+export interface PageProps {
+  verticalKey: string;
+}
+const FAQPage = ({ verticalKey }: PageProps) => {
+  console.log(verticalKey);
 
-const FAQPage = () => {
-  const searchActions = useSearchActions();
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  useLayoutEffect(() => {
-    setIsLoaded(false);
-    searchActions.setVertical("faqs");
-    searchActions.executeVerticalQuery().then((res) => setIsLoaded(true));
-  }, []);
+  const { isLoaded } = useVerticalSearch(verticalKey) || false;
+
   return (
     <>
       {isLoaded && (

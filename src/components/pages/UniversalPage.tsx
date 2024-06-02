@@ -1,17 +1,15 @@
 import { UniversalLimit, useSearchActions } from "@yext/search-headless-react";
 import {
   DirectAnswer,
-  MapboxMap,
   ResultsCount,
   UniversalResults,
 } from "@yext/search-ui-react";
 import { useLayoutEffect, useState } from "react";
-import MapPin from "../MapPin";
+import Mapboxuniv from "../Mapboxuniv";
 import FAQCard from "../cards/FAQCard";
 import LocationCard from "../cards/LocationCard";
 import ProfessionalCard from "../cards/ProfessionalCard";
 import ServicesCard from "../cards/ServicesCard";
-import Mapboxuniv from "../Mapboxuniv";
 
 const UniversalPage = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);

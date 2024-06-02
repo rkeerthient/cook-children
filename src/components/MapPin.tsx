@@ -76,8 +76,6 @@ const MapPin = ({
   selectedLocationFromContext,
   setSelectedLocationId,
 }: MapPinProps) => {
-  console.log(JSON.stringify(result));
-
   const location = result.rawData;
   const [isActive, setIsActive] = useState<boolean>();
   const popupRef = useRef(new Popup({ offset: 15 }));

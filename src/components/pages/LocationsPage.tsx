@@ -16,15 +16,17 @@ import {
 import { LngLat, LngLatBounds } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import * as React from "react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocationsContext } from "../../common/LocationsContext";
 import MapPin from "../MapPin";
 import LocationCard from "../cards/LocationCard";
+import { useVerticalSearch } from "../useVerticalSearch";
+import { PageProps } from "./FAQPage";
 
-const LocationsPage = () => {
+const LocationsPage = ({ verticalKey }: PageProps) => {
+  const { isLoaded } = useVerticalSearch(verticalKey) || false;
   const searchActions = useSearchActions();
   const filters = useSearchState((state) => state.filters.static);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedLocationId, setSelectedLocationId] = useState("");
   const {
     selectedLocationId: _selectedLocationId,
@@ -34,13 +36,6 @@ const LocationsPage = () => {
   useEffect(() => {
     selectedLocationId && _setSelectedLocationId(selectedLocationId);
   }, [selectedLocationId]);
-
-  useLayoutEffect(() => {
-    setIsLoading(true);
-    searchActions.setVertical("healthcare_facilities");
-    searchActions.setVerticalLimit(10);
-    searchActions.executeVerticalQuery().then(() => setIsLoading(false));
-  }, [searchActions]);
 
   const onDrag: OnDragHandler = React.useCallback(
     (center: LngLat, bounds: LngLatBounds) => {
@@ -69,7 +64,7 @@ const LocationsPage = () => {
 
   return (
     <>
-      {!isLoading && (
+      {isLoaded && (
         <div className="flex flex-row">
           <div className="flex flex-col w-2/5 p-4 relative">
             <>

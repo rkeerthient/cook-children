@@ -4,27 +4,16 @@ import {
   useSearchActions,
   VerticalResults as VR,
 } from "@yext/search-headless-react";
-import {
-  AppliedFilters,
-  Pagination,
-  ResultsCount,
-  SearchBar,
-  VerticalResults,
-  StandardCard,
-  Geolocation,
-  onSearchFunc,
-  Facets,
-  CardComponent,
-} from "@yext/search-ui-react";
+import { onSearchFunc, SearchBar } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
-import { verticals } from "../templates";
 import { ReviewsData, useLocationsContext } from "../common/LocationsContext";
+import { verticals } from "../templates";
 import { Ratings } from "../types/ratings";
 import FAQPage from "./pages/FAQPage";
+import Locator from "./pages/LocationsPage";
 import ProfessionalPage from "./pages/ProfessionalPage";
 import ServicePage from "./pages/ServicePage";
 import UniversalPage from "./pages/UniversalPage";
-import Locator from "./pages/LocationsPage";
 import { useTypingEffect } from "./useTypeEffect";
 type verticalInterface = {
   name: string;
@@ -110,20 +99,27 @@ const SearchPage = () => {
     }
   };
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
     executeSearch();
+    if (currentVertical) {
+      searchParams.set("vertical", currentVertical.key);
+    } else {
+      searchParams.delete("vertical");
+    }
+    history.pushState(null, "", "?" + searchParams.toString());
   }, [currentVertical]);
 
   const handleSearch: onSearchFunc = (searchEventData) => {
     const { query } = searchEventData;
-    const queryParams = new URLSearchParams(window.location.search);
+    const searchParams = new URLSearchParams(window.location.search);
     executeSearch();
 
     if (query) {
-      queryParams.set("query", query);
+      searchParams.set("query", query);
     } else {
-      queryParams.delete("query");
+      searchParams.delete("query");
     }
-    history.pushState(null, "", "?" + queryParams.toString());
+    history.pushState(null, "", "?" + searchParams.toString());
   };
 
   return (
@@ -155,13 +151,13 @@ const SearchPage = () => {
       <div className="w-full ">
         {currentVertical &&
           (currentVertical.key === "faqs" ? (
-            <FAQPage />
+            <FAQPage verticalKey={currentVertical.key} />
           ) : currentVertical.key === "specialties" ? (
-            <ServicePage />
+            <ServicePage verticalKey={currentVertical.key} />
           ) : currentVertical.key === "healthcare_professionals" ? (
-            <ProfessionalPage />
+            <ProfessionalPage verticalKey={currentVertical.key} />
           ) : currentVertical.key === "healthcare_facilities" ? (
-            <Locator />
+            <Locator verticalKey={currentVertical.key} />
           ) : (
             <UniversalPage />
           ))}
