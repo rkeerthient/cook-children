@@ -13,8 +13,7 @@ const Mapboxuniv = ({ data }: any) => {
   useEffect(() => {
     if (mapContainer.current && !map.current) {
       const mapInstance = new mapboxgl.Map({
-        accessToken:
-          "pk.eyJ1Ijoic3VubnlrZWVydGhpIiwiYSI6ImNsNWh5ZGt3czAyejUzY3A3Y3pvZ2E0bTgifQ.TNHfh1HL0LwTzLxs2TOaBQ",
+        accessToken: import.meta.env.YEXT_PUBLIC_MAP_API_KEY,
         container: mapContainer.current,
         center: [lng, lat],
         zoom: zoom,

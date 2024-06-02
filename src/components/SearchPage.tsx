@@ -25,11 +25,16 @@ import ProfessionalPage from "./pages/ProfessionalPage";
 import ServicePage from "./pages/ServicePage";
 import UniversalPage from "./pages/UniversalPage";
 import Locator from "./pages/LocationsPage";
+import { useTypingEffect } from "./useTypeEffect";
 type verticalInterface = {
   name: string;
   key: string;
 };
 const SearchPage = () => {
+  const { queryPrompts } = useTypingEffect(
+    import.meta.env.YEXT_PUBLIC_API_KEY,
+    import.meta.env.YEXT_PUBLIC_EXP_KEY
+  );
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const context = useLocationsContext();
   const { setReviewsData } = context;
@@ -126,7 +131,10 @@ const SearchPage = () => {
       <div className="bg-[#e7eaea]">
         <div className="centered-container">
           <div className="px-8 pt-8">
-            <SearchBar onSearch={handleSearch}></SearchBar>
+            <SearchBar
+              onSearch={handleSearch}
+              customCssClasses={{ inputElement: "demo " }}
+            ></SearchBar>
             <ul className="pt-10 flex">
               {verticals.map((item, index) => {
                 const { name, key: _key } = item;
