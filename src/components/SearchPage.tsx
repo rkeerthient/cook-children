@@ -5,7 +5,7 @@ import {
   VerticalResults as VR,
 } from "@yext/search-headless-react";
 import { onSearchFunc, SearchBar } from "@yext/search-ui-react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ReviewsData, useLocationsContext } from "../common/LocationsContext";
 import { verticals } from "../templates";
 import { Ratings } from "../types/ratings";
@@ -15,7 +15,6 @@ import ProfessionalPage from "./pages/ProfessionalPage";
 import ServicePage from "./pages/ServicePage";
 import UniversalPage from "./pages/UniversalPage";
 import { useTypingEffect } from "./useTypeEffect";
-import useURLSearchParams from "./useURLSearchParams";
 type verticalInterface = {
   name: string;
   key: string;
@@ -99,18 +98,43 @@ const SearchPage = () => {
         .finally(() => setIsLoaded(true));
     }
   };
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    searchParams && console.log(JSON.stringify(searchParams));
-
+    const verticalParam = searchParams.get("vertical");
     executeSearch();
-    if (currentVertical) {
+    if (verticalParam) {
       searchParams.set("vertical", currentVertical.key);
     } else {
       searchParams.delete("vertical");
     }
     history.pushState(null, "", "?" + searchParams.toString());
   }, [currentVertical]);
+
+  useLayoutEffect(() => {
+    console.log(`entered`);
+
+    if (window !== undefined) {
+      const verticalParam = new URLSearchParams(window.location.search).get(
+        "vertical"
+      );
+      const queryString = new URLSearchParams(window.location.search).get(
+        "query"
+      );
+
+      if (verticalParam) {
+        const matchedVertical = verticals.find(
+          (item) => item.key.toLowerCase() === verticalParam.toLowerCase()
+        );
+        if (matchedVertical) {
+          setCurrentVertical(matchedVertical);
+        }
+      }
+      if (queryString) {
+        searchActions.setQuery(queryString);
+      }
+    }
+  }, []);
 
   const handleSearch: onSearchFunc = (searchEventData) => {
     const { query } = searchEventData;
