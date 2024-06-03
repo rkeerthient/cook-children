@@ -101,9 +101,8 @@ const SearchPage = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const verticalParam = searchParams.get("vertical");
     executeSearch();
-    if (verticalParam) {
+    if (currentVertical && currentVertical.key.toLowerCase() !== "all") {
       searchParams.set("vertical", currentVertical.key);
     } else {
       searchParams.delete("vertical");
@@ -112,8 +111,6 @@ const SearchPage = () => {
   }, [currentVertical]);
 
   useLayoutEffect(() => {
-    console.log(`entered`);
-
     if (window !== undefined) {
       const verticalParam = new URLSearchParams(window.location.search).get(
         "vertical"

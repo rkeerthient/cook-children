@@ -11,8 +11,6 @@ export interface PageProps {
   verticalKey: string;
 }
 const FAQPage = ({ verticalKey }: PageProps) => {
-  console.log(verticalKey);
-
   const { isLoaded } = useVerticalSearch(verticalKey) || false;
 
   return (
