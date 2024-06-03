@@ -4,11 +4,10 @@ import {
   useSearchActions,
   VerticalResults as VR,
 } from "@yext/search-headless-react";
-import { onSearchFunc, SearchBar } from "@yext/search-ui-react";
+import { SearchBar } from "@yext/search-ui-react";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { ReviewsData, useLocationsContext } from "../common/LocationsContext";
+import { useLocationsContext } from "../common/LocationsContext";
 import { verticals } from "../templates";
-import { Ratings } from "../types/ratings";
 import FAQPage from "./pages/FAQPage";
 import Locator from "./pages/LocationsPage";
 import ProfessionalPage from "./pages/ProfessionalPage";
@@ -24,7 +23,7 @@ const SearchPage = () => {
     import.meta.env.YEXT_PUBLIC_API_KEY,
     import.meta.env.YEXT_PUBLIC_EXP_KEY
   );
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
   const context = useLocationsContext();
   const { setReviewsData } = context;
   const [results, setResults] = useState<
@@ -43,66 +42,57 @@ const SearchPage = () => {
   };
   useEffect(() => {
     if (!results) return;
-    const ids: string[] = [];
-    if (
-      currentVertical.key !== "all" &&
-      currentVertical.key === "healthcare_professionals"
-    ) {
+    const ids: any[] = [];
+
+    if (currentVertical.key === "healthcare_professionals") {
       results.forEach((item: any) => ids.push(item.rawData.npi));
-    } else {
-      results.forEach((_results: any) => {
-        if (_results.verticalKey === "healthcare_professionals") {
-          _results.results.map((item: any) => ids.push(item.rawData.npi));
+    } else if (currentVertical.key === "all") {
+      results.forEach(({ verticalKey, results: nestedResults }: any) => {
+        if (verticalKey === "healthcare_professionals") {
+          nestedResults.forEach((item: any) => ids.push(item.rawData.npi));
         }
       });
     }
-    ids.length >= 1 && getReviews(ids, results.length);
+
+    if (ids.length) getReviews(ids, results.length);
   }, [results]);
 
-  const getReviews = async (ids: string[], _length: number) => {
-    const url = `/api/getRatings?npis=${ids.join(",")}&length=${_length}`;
+  const getReviews = async (ids: any, length: any) => {
+    const url = `/api/getRatings?npis=${ids.join(",")}&length=${length}`;
     try {
-      let requ = await fetch(url);
-      const res: Ratings = await requ.json();
-      let resBuilder: ReviewsData[] = [];
-      res.entities.forEach((item) => {
-        resBuilder.push({
-          ratingValue: item.overallRating.value,
-          ratingCount: item.totalRatingCount,
-          commentsCount: item.totalCommentCount,
-          npi: item.id,
-        });
-      });
-      setReviewsData(resBuilder);
+      const response = await fetch(url);
+      const data = await response.json();
+      const reviewsData = data.entities.map((item: any) => ({
+        ratingValue: item.overallRating.value,
+        ratingCount: item.totalRatingCount,
+        commentsCount: item.totalCommentCount,
+        npi: item.id,
+      }));
+      setReviewsData(reviewsData);
     } catch (error) {
       console.error("Error fetching reviews:", error);
     }
   };
 
   const executeSearch = () => {
-    setIsLoaded(false);
     if (currentVertical.key === "all") {
       searchActions.setUniversal();
       searchActions.setUniversalLimit(universalLimit);
-      searchActions
-        .executeUniversalQuery()
-        .then((res: any) => {
-          setResults(res?.verticalResults);
-        })
-        .finally(() => setIsLoaded(true));
+      searchActions.executeUniversalQuery().then((res: any) => {
+        setResults(res?.verticalResults);
+      });
     } else {
       searchActions.setVertical(currentVertical.key);
       searchActions
         .executeVerticalQuery()
-        .then((res: any) => setResults(res?.verticalResults.results))
-        .finally(() => setIsLoaded(true));
+        .then((res: any) => setResults(res?.verticalResults.results));
     }
   };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     executeSearch();
-    if (currentVertical && currentVertical.key.toLowerCase() !== "all") {
+    if (currentVertical?.key.toLowerCase() !== "all") {
       searchParams.set("vertical", currentVertical.key);
     } else {
       searchParams.delete("vertical");
@@ -111,33 +101,27 @@ const SearchPage = () => {
   }, [currentVertical]);
 
   useLayoutEffect(() => {
-    if (window !== undefined) {
-      const verticalParam = new URLSearchParams(window.location.search).get(
-        "vertical"
-      );
-      const queryString = new URLSearchParams(window.location.search).get(
-        "query"
-      );
+    const searchParams = new URLSearchParams(window.location.search);
+    const verticalParam = searchParams.get("vertical");
+    const queryString = searchParams.get("query");
 
-      if (verticalParam) {
-        const matchedVertical = verticals.find(
-          (item) => item.key.toLowerCase() === verticalParam.toLowerCase()
-        );
-        if (matchedVertical) {
-          setCurrentVertical(matchedVertical);
-        }
+    if (verticalParam) {
+      const matchedVertical = verticals.find(
+        (item) => item.key.toLowerCase() === verticalParam.toLowerCase()
+      );
+      if (matchedVertical) {
+        setCurrentVertical(matchedVertical);
       }
-      if (queryString) {
-        searchActions.setQuery(queryString);
-      }
+    }
+
+    if (queryString) {
+      searchActions.setQuery(queryString);
     }
   }, []);
 
-  const handleSearch: onSearchFunc = (searchEventData) => {
-    const { query } = searchEventData;
+  const handleSearch = ({ query }: any) => {
     const searchParams = new URLSearchParams(window.location.search);
     executeSearch();
-
     if (query) {
       searchParams.set("query", query);
     } else {
