@@ -1,18 +1,28 @@
 import Cta from "../components/cta";
+import ProfessionalsOnlyPage from "./pages/ProfessionalsOnlyPage";
 
 type Link = {
   label: string;
   url: string;
 };
 
-const links: Link[] = [
+const links: any[] = [
   {
-    label: "Home",
+    label: "Find Care",
     url: "/",
   },
   {
-    label: "About",
-    url: "/turtlehead-tacos",
+    label: "For Patients",
+    url: "/professionals.html",
+  },
+  {
+    label: "For Providers",
+    url: "/",
+  },
+  ,
+  {
+    label: "For community",
+    url: "/",
   },
 ];
 
@@ -26,9 +36,24 @@ const Header = ({ _site }: any) => {
   ));
 
   return (
-    <>
-      <img src="https://i.imgur.com/jE8j6J4.png" alt="" className="w-full" />
-    </>
+    <div className="p-6 flex justify-between items-center w-full max-w-screen-3xl">
+      <img
+        src="https://www.cookchildrens.org/siteassets/images/brand/cook_childrens_standard_spot.svg"
+        alt=""
+        className="w-auto h-20"
+      />
+      <div className="flex gap-8 items-center text-2xl text-primary">
+        {links.map((item: Link, index: any) => (
+          <a
+            href={item.url}
+            key={index}
+            className={`${item.label === "For Patients" ? "hover:underline" : ""}`}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </div>
   );
 };
 

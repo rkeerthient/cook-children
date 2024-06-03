@@ -50,3 +50,19 @@
     margin-right: auto;
   }
 }
+
+.chatHeaderAndBotResponseColors {
+  @apply !bg-none !bg-primary;
+}
+
+.chatTextboxColor {
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  outline: none;
+  text-align: left;
+  font-size: 1rem;
+}
+.chatTextboxColor:focus {
+  border-color: #66ccff;
+  box-shadow: 0 0 0 0.2rem rgba(102, 204, 255, 0.5);
+}

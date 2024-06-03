@@ -1,10 +1,16 @@
 import {
+  provideHeadless,
   Result,
   UniversalLimit,
   useSearchActions,
   VerticalResults as VR,
 } from "@yext/search-headless-react";
-import { SearchBar } from "@yext/search-ui-react";
+import {
+  DropdownItem,
+  FocusedItemData,
+  RenderEntityPreviews,
+  SearchBar,
+} from "@yext/search-ui-react";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useLocationsContext } from "../common/LocationsContext";
 import { verticals } from "../templates";
@@ -14,6 +20,8 @@ import ProfessionalPage from "./pages/ProfessionalPage";
 import ServicePage from "./pages/ServicePage";
 import UniversalPage from "./pages/UniversalPage";
 import { useTypingEffect } from "./useTypeEffect";
+import { searchConfig } from "./config";
+import HealthcareProfessional from "../types/healthcare_professionals";
 type verticalInterface = {
   name: string;
   key: string;
@@ -41,6 +49,7 @@ const SearchPage = () => {
     healthcare_professionals: 4,
     specialties: 4,
   };
+
   useEffect(() => {
     if (!results) return;
     const ids: any[] = [];

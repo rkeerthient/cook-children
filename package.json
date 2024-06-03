@@ -25,6 +25,8 @@
     "@headlessui/react": "^2.0.4",
     "@heroicons/react": "^2.1.3",
     "@types/react-slick": "^0.23.13",
+    "@yext/chat-headless-react": "^0.7.0",
+    "@yext/chat-ui-react": "^0.9.3",
     "@yext/pages-components": "1.0.0-rc.11",
     "@yext/search-headless-react": "^2.4.0",
     "@yext/search-ui-react": "^1.6.0",

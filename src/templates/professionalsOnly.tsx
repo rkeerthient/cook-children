@@ -11,20 +11,21 @@ import {
 import SearchPage from "../components/SearchPage";
 import PageLayout from "../components/page-layout";
 import "../index.css";
+import ProfessionalsOnlyPage from "../components/pages/ProfessionalsOnlyPage";
 
 export const config: TemplateConfig = {
-  name: "search",
+  name: "professionals search",
 };
 
 export const getPath = () => {
-  return `index.html`;
+  return `professionals.html`;
 };
 
 export const getHeadConfig: GetHeadConfig<
   TemplateRenderProps
 > = (): HeadConfig => {
   return {
-    title: "Cook Children's | Search",
+    title: "Cook Children's Professionals| Search",
     charset: "UTF-8",
     viewport: "width=device-width, initial-scale=1",
     tags: [
@@ -66,7 +67,7 @@ const Search: Template<TemplateRenderProps> = ({ document }) => {
   return (
     <>
       <PageLayout>
-        <SearchPage></SearchPage>
+        <ProfessionalsOnlyPage verticalKey={"healthcare_professionals"} />
       </PageLayout>
     </>
   );
