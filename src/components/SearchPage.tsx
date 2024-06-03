@@ -18,6 +18,7 @@ type verticalInterface = {
   name: string;
   key: string;
 };
+
 const SearchPage = () => {
   const { queryPrompts } = useTypingEffect(
     import.meta.env.YEXT_PUBLIC_API_KEY,
