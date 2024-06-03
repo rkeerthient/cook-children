@@ -1,12 +1,22 @@
-import { CardProps } from "@yext/search-ui-react";
-import HealthcareProfessional from "../../types/healthcare_professionals";
-import { HoursStatus, Image } from "@yext/pages-components";
+import {
+  Dialog,
+  DialogPanel,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
 import { CheckIcon, PhoneIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { useLocationsContext } from "../../common/LocationsContext";
+import { Image } from "@yext/pages-components";
+import { CardProps } from "@yext/search-ui-react";
+import { useState } from "react";
 import StarRatings from "react-star-ratings";
+import { useLocationsContext } from "../../common/LocationsContext";
+import HealthcareProfessional from "../../types/healthcare_professionals";
+import AppointmentForm from "../AppointmentForm";
 import HoursText from "../HoursText";
 
 const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
+  let [isOpen, setIsOpen] = useState(false);
+
   const { reviewsData } = useLocationsContext();
   const { name } = result;
   const {
@@ -15,7 +25,6 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
     mainPhone,
     hours,
     landingPageUrl,
-    reservationUrl,
     c_acceptingPatientsAges03,
     acceptingNewPatients,
     npi,
@@ -33,8 +42,10 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
   )?.commentsCount;
 
   return (
-    <div className="border rounded-lg">
-      <div className="relative flex flex-col">
+    <div
+      className={`border rounded-lg ${isOpen ? `opacity-80` : `opacity-100`}`}
+    >
+      <div className={`relative flex flex-col`}>
         <a
           href={landingPageUrl}
           className="group aspect-square block w-full overflow-hidden rounded-t-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 bottom-12"
@@ -125,14 +136,42 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
             Accepting patients ages 0-3
           </p>
           <div className="flex flex-col text-sm gap-2 justify-start pt-4 pb-2 ">
-            {reservationUrl && (
-              <a className="cta !w-fit" href={reservationUrl.url}>
-                Request an appointment
-              </a>
-            )}
+            <div
+              className="cta !w-fit !cursor-pointer"
+              onClick={() => setIsOpen(true)}
+            >
+              Request an appointment
+            </div>
           </div>
         </div>
       </div>
+      <Transition appear show={isOpen}>
+        <Dialog
+          as="div"
+          className="relative z-10 focus:outline-none"
+          onClose={() => setIsOpen(false)}
+        >
+          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+              <TransitionChild
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 transform-[scale(95%)]"
+                enterTo="opacity-100 transform-[scale(100%)]"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 transform-[scale(100%)]"
+                leaveTo="opacity-0 transform-[scale(95%)]"
+              >
+                <DialogPanel className="w-full max-w-7xl rounded-xl bg-white/5 p-6  ">
+                  <AppointmentForm
+                    professionalName={name!}
+                    onClose={() => setIsOpen(false)}
+                  ></AppointmentForm>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 };
