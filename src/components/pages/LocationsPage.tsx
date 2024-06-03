@@ -22,6 +22,7 @@ import MapPin from "../MapPin";
 import LocationCard from "../cards/LocationCard";
 import { useVerticalSearch } from "../useVerticalSearch";
 import { PageProps } from "./FAQPage";
+import Loader from "../Loader";
 
 const LocationsPage = ({ verticalKey }: PageProps) => {
   const { isLoaded } = useVerticalSearch(verticalKey) || false;
@@ -64,7 +65,7 @@ const LocationsPage = ({ verticalKey }: PageProps) => {
 
   return (
     <>
-      {isLoaded && (
+      {isLoaded ? (
         <div className="flex flex-row">
           <div className="flex flex-col w-2/5 p-4 relative">
             <>
@@ -107,6 +108,8 @@ const LocationsPage = ({ verticalKey }: PageProps) => {
             />
           </div>
         </div>
+      ) : (
+        <Loader />
       )}
     </>
   );

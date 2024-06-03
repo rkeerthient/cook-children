@@ -8,12 +8,13 @@ import {
 import ServicesCard from "../cards/ServicesCard";
 import { useVerticalSearch } from "../useVerticalSearch";
 import { PageProps } from "./FAQPage";
+import Loader from "../Loader";
 
 const ServicePage = ({ verticalKey }: PageProps) => {
-   const { isLoaded } = useVerticalSearch(verticalKey) || false;;
+  const { isLoaded } = useVerticalSearch(verticalKey) || false;
   return (
     <>
-      {isLoaded && (
+      {isLoaded ? (
         <div className="flex flex-row gap-2 mt-4 w-full px-14 centered-container">
           <div className="flex-grow ">
             <div className="flex flex-col items-baseline  ">
@@ -30,6 +31,8 @@ const ServicePage = ({ verticalKey }: PageProps) => {
             <Geolocation />
           </div>
         </div>
+      ) : (
+        <Loader />
       )}
     </>
   );

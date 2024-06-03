@@ -10,6 +10,7 @@ import FAQCard from "../cards/FAQCard";
 import LocationCard from "../cards/LocationCard";
 import ProfessionalCard from "../cards/ProfessionalCard";
 import ServicesCard from "../cards/ServicesCard";
+import Loader from "../Loader";
 
 const UniversalPage = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -88,7 +89,7 @@ const UniversalPage = () => {
     <div className="max-w-7xl p-4 mx-auto">
       <>
         {!isLoaded ? (
-          <div />
+          <Loader />
         ) : (
           <>
             <ResultsCount />

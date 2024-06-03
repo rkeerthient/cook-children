@@ -7,6 +7,7 @@ import {
 } from "@yext/search-ui-react";
 import FAQCard from "../cards/FAQCard";
 import { useVerticalSearch } from "../useVerticalSearch";
+import Loader from "../Loader";
 export interface PageProps {
   verticalKey: string;
 }
@@ -15,7 +16,7 @@ const FAQPage = ({ verticalKey }: PageProps) => {
 
   return (
     <>
-      {isLoaded && (
+      {isLoaded ? (
         <div className="flex flex-row gap-2 mt-4 w-full px-14 centered-container">
           <div className="flex-grow  ">
             <div className="flex flex-col items-baseline  ">
@@ -32,6 +33,8 @@ const FAQPage = ({ verticalKey }: PageProps) => {
             <Geolocation />
           </div>
         </div>
+      ) : (
+        <Loader />
       )}
     </>
   );

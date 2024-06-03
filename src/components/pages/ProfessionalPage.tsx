@@ -9,12 +9,13 @@ import {
 import ProfessionalCard from "../cards/ProfessionalCard";
 import { useVerticalSearch } from "../useVerticalSearch";
 import { PageProps } from "./FAQPage";
+import Loader from "../Loader";
 
 const ProfessionalPage = ({ verticalKey }: PageProps) => {
   const { isLoaded } = useVerticalSearch(verticalKey) || false;
   return (
     <>
-      {isLoaded && (
+      {isLoaded ? (
         <div className="flex flex-row gap-2 mt-4 w-full px-14 ">
           <div className="w-1/5">
             <Facets
@@ -37,6 +38,8 @@ const ProfessionalPage = ({ verticalKey }: PageProps) => {
             <Geolocation />
           </div>
         </div>
+      ) : (
+        <Loader />
       )}
     </>
   );
