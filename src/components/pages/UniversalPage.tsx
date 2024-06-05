@@ -34,11 +34,11 @@ const UniversalPage = () => {
     }
     return (
       <div className="flex flex-col gap-4">
+        <div>{header}</div>
         <div className="univLocMap">
           <Mapboxuniv data={results} />
         </div>
         <div>
-          <div>{header}</div>
           <div className="flex flex-col gap-4">
             {results.map((r: any, index: number) => (
               <CardComponent key={index} result={r} />
