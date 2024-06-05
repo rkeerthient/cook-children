@@ -50,10 +50,12 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
           href={landingPageUrl}
           className="group aspect-square block w-full overflow-hidden rounded-t-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 bottom-12"
         >
-          <Image
-            image={headshot!}
-            className="pointer-events-none object-cover group-hover:opacity-75"
-          />
+          {headshot && (
+            <Image
+              image={headshot!}
+              className="pointer-events-none object-cover group-hover:opacity-75"
+            />
+          )}
         </a>
         <a
           href={landingPageUrl}
@@ -105,8 +107,11 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
           <p className="pointer-events-none block  text-lg font-medium text-[#2aa67c] h-12">
             {c_specialty}
           </p>
-
-          <HoursText timezone={timezone} hours={hours} />
+          {hours ? (
+            <HoursText timezone={timezone} hours={hours} />
+          ) : (
+            <div>Fill in your hours</div>
+          )}{" "}
           <div className="pointer-events-none flex justify-center md:justify-start font-medium leading-loose items-center text-sm text-secondary">
             <PhoneIcon className="h-4 w-4" />
             {mainPhone && (
@@ -118,7 +123,6 @@ const ProfessionalCard = ({ result }: CardProps<HealthcareProfessional>) => {
               </span>
             )}
           </div>
-
           <p className="pointer-events-none text-sm font-medium  flex items-center gap-1 text-secondary">
             {acceptingNewPatients ? (
               <CheckIcon className="h-4 w-4 text-green-700" />
